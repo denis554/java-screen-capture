@@ -17,8 +17,8 @@ Options:
 ```
 
 ### Notes
-- If you don't set dimensions of screenshot then that saved in dimensions if your monitor.
-- If you don't set extension (with -e or --extension) and output file (with -o and --output) then set the extension to PNG by default.
+- If you don't sets dimensions of screenshot then that saved in dimensions if your monitor.
+- If you don't sets extension (with -e or --extension) and output file (with -o and --output) then set the extension to PNG by default.
 
 ### Examples
 Capture a screenshot in dimensions of your monitor and save as example.jpg in JPG format:
