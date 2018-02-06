@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2018 mrse
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package screenshot.capture;
 
 import java.awt.AWTException;
@@ -26,10 +42,10 @@ public class ScreenshotCapture {
         Options options = new Options();
         options.addOption("h","help", false, "Show help/usage");
         options.addOption("o","output", true, "Set output file name");
-        options.addOption("e","extention", true, "Set output file extention (png|jpg|gif)");
+        options.addOption("e","extension", true, "Set output file extension (png|jpg|gif)");
         options.addOption("x","width", true, "Set output width");
         options.addOption("y","height", true, "Set output height");
-        options.addOption("b","buffer", false, "Get screenshot in output buffer");
+        options.addOption("s","standardstream", false, "Get screenshot in standard output stream");
         
         HelpFormatter help = new HelpFormatter();
         help.setDescPadding(5);
@@ -56,35 +72,35 @@ public class ScreenshotCapture {
             Capture screenshot = new Capture(width,height);
             
             if(cmd.hasOption("o")){
-                String extention,
+                String extension,
                        outputFile = cmd.getOptionValue("o");
                 if(cmd.hasOption("e"))
-                    extention = cmd.getOptionValue("e");
+                    extension = cmd.getOptionValue("e");
                 else
-                    extention = ScreenshotCapture.getFileExtention(outputFile);
+                    extension = ScreenshotCapture.getFileExtension(outputFile);
                 
-                if(! isInValidImageFormats(extention))
-                    throw new InvalidExtentionException(extention);
+                if(! isInValidImageFormats(extension))
+                    throw new InvalidExtensionException(extension);
                 
-                screenshot.saveToFile(outputFile, extention);
+                screenshot.saveToFile(outputFile, extension);
             }
             
-            if(cmd.hasOption("b")){
-                String extention = Capture.IMAGE_FORMAT_PNG;
+            if(cmd.hasOption("s")){
+                String extension = Capture.IMAGE_FORMAT_PNG;
                 if(cmd.hasOption("e"))
-                    extention = cmd.getOptionValue("e");
+                    extension = cmd.getOptionValue("e");
                 
-                if(! isInValidImageFormats(extention))
-                    throw new InvalidExtentionException(extention);
+                if(! isInValidImageFormats(extension))
+                    throw new InvalidExtensionException(extension);
                 
-                screenshot.writeToStandardOutputStream(extention);
+                screenshot.writeToStandardOutputStream(extension);
             }
         }
         catch (MissingArgumentException | UnrecognizedOptionException ex){
             System.out.println(ex.getMessage());
             help.printHelp("java -jar ScreenshotCapture.jar [options]", options);
         }
-        catch (ParseException | AWTException | InvalidExtentionException ex) {
+        catch (ParseException | AWTException | InvalidExtensionException ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(ScreenshotCapture.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,12 +109,12 @@ public class ScreenshotCapture {
         }
     }
     
-    public static String getFileExtention(String file){
-        String extention = "";
+    public static String getFileExtension(String file){
+        String extension = "";
         for(int i = file.length() - 3;i < file.length();i ++){
-            extention += file.charAt(i);
+            extension += file.charAt(i);
         }
-        return extention;
+        return extension;
     }
     
     public static boolean isInValidImageFormats(String format){
