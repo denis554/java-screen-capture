@@ -1,4 +1,4 @@
-# Screen Capture
+# Java Screen Capture
 CLI programme to take a screenshot.
 Currently you can set width, height and format (PNG, JPG, GIF) of captured screenshot.
 This programme is written in Java language and as a result this is a cross-platform programme.
@@ -18,7 +18,7 @@ Options:
 
 ### Notes
 - If you don't sets dimensions of screenshot then that saved in dimensions if your monitor.
-- If you don't sets extension (with -e or --extension) and output file (with -o and --output) then set the extension to PNG by default.
+- If you don't sets extension (with `-e` or `--extension`) and output file (with `-o` and `--output`) then set the extension to PNG by default.
 
 ### Examples
 Capture a screenshot in dimensions of your monitor and save as example.jpg in JPG format:
@@ -32,4 +32,9 @@ java -jar ScreenshotCapture.jar -x 300 -s > example.png
 ```
 
 ## Development
-If you want to develop this programme you should add Common CLI library to your project. (Jar files of Common CLI located at /lib directory)
+You can build programme easily with [ant](http://ant.apache.org/). Just install Ant and run `ant` command and JAR file is builded in `/dist` directory.
+If you want to develop this programme you should add [Common CLI](http://commons.apache.org/proper/commons-cli/) library to your project. (Jar files of Common CLI located at `/libs` directory)
+
+## Todo
+- Supports non-fullscreen screenshots.
+- Set quality of screenshot.
