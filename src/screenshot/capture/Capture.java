@@ -28,7 +28,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- *
+ * This class created to capture the screenshot and resize that.
  * @author Amir Aslan Aslani
  */
 public class Capture {
@@ -40,6 +40,12 @@ public class Capture {
     private final BufferedImage image;
     private final int width,height;
     
+    /**
+     * This constructor capture screenshot and save that in image property.
+     * @param width Width of captured screenshot. If width is auto -1 given.
+     * @param height Height of captured screenshot. If height is auto -1 given.
+     * @throws AWTException 
+     */
     public Capture(int width, int height) throws AWTException{
         BufferedImage bimg = new Robot().createScreenCapture(
                 new Rectangle(
@@ -69,10 +75,21 @@ public class Capture {
         g.dispose();
     }
     
+    /**
+     * This method writes picture saved in image property to file with given address.
+     * @param to Where picture should writes.
+     * @param format Format of picture that should be writed to file.
+     * @throws IOException 
+     */
     public void saveToFile(String to,String format) throws IOException{
         ImageIO.write(this.image, format, new File(to));
     }
     
+    /**
+     * This method writes picture saved in image property to standard output stream.
+     * @param format Format of picture that should be writed to stream.
+     * @throws IOException 
+     */
     public void writeToStandardOutputStream(String format) throws IOException{
         ImageIO.write(this.image, format, System.out);
     }

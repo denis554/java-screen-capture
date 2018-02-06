@@ -17,10 +17,16 @@
 package screenshot.capture;
 
 /**
- *
+ * This class is thrown when extension on input is not valid extension.(Is not PNG, JPG or GIF)
  * @author Amir Aslan Aslani
  */
 public class InvalidExtensionException extends Exception {
+    /**
+     * This constructor created exception message and send it to parent's (Exception) constructor.
+     * Created message's pattern: "${extention}" is invalid extension
+     * @param extension 
+     * Invalid extension that we thrown exception for that
+     */
     public InvalidExtensionException(String extension){
         super("\"" + extension + "\" is invalid extension");
     }

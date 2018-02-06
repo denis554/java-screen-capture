@@ -32,7 +32,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
 
 /**
- *
+ * This class is decides on arguments and sets parameters that Capture class called from that.
  * @author Amir Aslan Aslani
  */
 public class ScreenshotCapture {
@@ -109,6 +109,11 @@ public class ScreenshotCapture {
         }
     }
     
+    /**
+     * This method gets a file path and return 3-Characters extension of that file. 
+     * @param file File path that we want to get that's extension.
+     * @return 3-Character extension of file at given path. (Last 3 character of file path)
+     */
     public static String getFileExtension(String file){
         String extension = "";
         for(int i = file.length() - 3;i < file.length();i ++){
@@ -117,6 +122,11 @@ public class ScreenshotCapture {
         return extension;
     }
     
+    /**
+     * This method checks given extension is valid or not.
+     * @param format That extension we want to know is valid or not.
+     * @return If given extension is valid returns True else returns False.
+     */
     public static boolean isInValidImageFormats(String format){
         return Arrays.asList(Capture.VALID_IMAGE_FORMATS).contains(format);
     }
