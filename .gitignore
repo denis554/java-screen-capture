@@ -5,3 +5,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+# Personal
+.directory
