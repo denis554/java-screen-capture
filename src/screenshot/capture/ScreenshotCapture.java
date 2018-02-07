@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 mrse
+ * Copyright (C) 2018 Amir Aslan Aslani
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,30 +36,48 @@ import org.apache.commons.cli.UnrecognizedOptionException;
  * @author Amir Aslan Aslani
  */
 public class ScreenshotCapture {
-
+    private final Options options = new Options();
+    private final HelpFormatter help = new HelpFormatter();
+    private final CommandLineParser parser = new DefaultParser();
+    
+    /**
+     * Main method of program that every thing is starts from here :) .
+     * @param args Input arguments of CLI.
+     */
     public static void main(String[] args) {
-        
-        Options options = new Options();
+        ScreenshotCapture screenshotCapture = new ScreenshotCapture();
+        screenshotCapture.parse(args);
+    }
+    
+    /**
+     * Here options of input arguments parser and help formatter has been set.
+     */
+    public ScreenshotCapture(){
         options.addOption("h","help", false, "Show help/usage");
         options.addOption("o","output", true, "Set output file name");
         options.addOption("e","extension", true, "Set output file extension (png|jpg|gif)");
         options.addOption("x","width", true, "Set output width");
         options.addOption("y","height", true, "Set output height");
         options.addOption("s","standardstream", false, "Get screenshot in standard output stream");
+        options.addOption("b","base64", false, "Get screenshot's encoded string in base64");
         
-        HelpFormatter help = new HelpFormatter();
         help.setDescPadding(5);
         help.setLeftPadding(2);
-        
-        CommandLineParser parser = new DefaultParser();
-        
+    }
+    
+    /**
+     * Here input arguments of CLI decided and parameters sends to Capture class.
+     * @param args Input arguments of CLI.
+     */
+    public void parse(String[] args){
         try {
             CommandLine cmd = parser.parse(options, args);
+            
             int width = -1,
                 height = -1;
             
             if(cmd.hasOption("h")){
-                help.printHelp("java -jar ScreenshotCapture.jar [options]", options);
+                showHelpMenu();
                 return;
             }
             
@@ -71,42 +89,57 @@ public class ScreenshotCapture {
             
             Capture screenshot = new Capture(width,height);
             
+            String extension = Capture.IMAGE_FORMAT_PNG;
             if(cmd.hasOption("o")){
-                String extension,
-                       outputFile = cmd.getOptionValue("o");
+                String outputFile = cmd.getOptionValue("o");
                 if(cmd.hasOption("e"))
                     extension = cmd.getOptionValue("e");
                 else
-                    extension = ScreenshotCapture.getFileExtension(outputFile);
+                    extension = getFileExtension(outputFile);
                 
                 if(! isInValidImageFormats(extension))
                     throw new InvalidExtensionException(extension);
                 
                 screenshot.saveToFile(outputFile, extension);
             }
-            
-            if(cmd.hasOption("s")){
-                String extension = Capture.IMAGE_FORMAT_PNG;
+            else{
                 if(cmd.hasOption("e"))
                     extension = cmd.getOptionValue("e");
-                
+
                 if(! isInValidImageFormats(extension))
                     throw new InvalidExtensionException(extension);
-                
+            }
+            
+            if(cmd.hasOption("b")){
+                String base64 = screenshot.getBase64(extension);
+                System.out.println(base64);
+            }
+            else if(cmd.hasOption("s")){
                 screenshot.writeToStandardOutputStream(extension);
             }
         }
         catch (MissingArgumentException | UnrecognizedOptionException ex){
             System.out.println(ex.getMessage());
-            help.printHelp("java -jar ScreenshotCapture.jar [options]", options);
+            showHelpMenu();
         }
         catch (ParseException | AWTException | InvalidExtensionException ex) {
             System.err.println(ex.getMessage());
             Logger.getLogger(ScreenshotCapture.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (IOException ex){
+            ex.printStackTrace();
             Logger.getLogger(ScreenshotCapture.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * Show help/usage in standard output stream.
+     */
+    private void showHelpMenu(){
+        String helpText = "java -jar ScreenshotCapture.jar [options]\n"
+                        + "\n"
+                        + "Options:";
+        help.printHelp(helpText, options);
     }
     
     /**
@@ -114,7 +147,7 @@ public class ScreenshotCapture {
      * @param file File path that we want to get that's extension.
      * @return 3-Character extension of file at given path. (Last 3 character of file path)
      */
-    public static String getFileExtension(String file){
+    private String getFileExtension(String file){
         String extension = "";
         for(int i = file.length() - 3;i < file.length();i ++){
             extension += file.charAt(i);
@@ -127,7 +160,7 @@ public class ScreenshotCapture {
      * @param format That extension we want to know is valid or not.
      * @return If given extension is valid returns True else returns False.
      */
-    public static boolean isInValidImageFormats(String format){
+    private boolean isInValidImageFormats(String format){
         return Arrays.asList(Capture.VALID_IMAGE_FORMATS).contains(format);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 mrse
+ * Copyright (C) 2018 Amir Aslan Aslani
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,11 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Base64;
 import javax.imageio.ImageIO;
 
 /**
@@ -32,10 +35,14 @@ import javax.imageio.ImageIO;
  * @author Amir Aslan Aslani
  */
 public class Capture {
-    final static String VALID_IMAGE_FORMATS[] = {"png","gif","jpg"},
-                        IMAGE_FORMAT_PNG = "png",
-                        IMAGE_FORMAT_JPG = "jpg",
-                        IMAGE_FORMAT_GIF = "gif";
+    public final static String  VALID_IMAGE_FORMATS[] = {
+                                    "png",
+                                    "gif",
+                                    "jpg"
+                                },
+                                IMAGE_FORMAT_PNG = "png",
+                                IMAGE_FORMAT_JPG = "jpg",
+                                IMAGE_FORMAT_GIF = "gif";
     
     private final BufferedImage image;
     private final int width,height;
@@ -69,7 +76,7 @@ public class Capture {
         
         Image scaledImg = bimg.getScaledInstance(width, height, BufferedImage.SCALE_AREA_AVERAGING);
         
-        image = new BufferedImage(width, height, bimg.TYPE_INT_ARGB);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
         g.drawImage(scaledImg, 0, 0, null);
         g.dispose();
@@ -78,7 +85,7 @@ public class Capture {
     /**
      * This method writes picture saved in image property to file with given address.
      * @param to Where picture should writes.
-     * @param format Format of picture that should be writed to file.
+     * @param format Format of picture that should be write to file.
      * @throws IOException 
      */
     public void saveToFile(String to,String format) throws IOException{
@@ -86,11 +93,34 @@ public class Capture {
     }
     
     /**
+     * Writes image to stream
+     * @param format Format of picture that should be write to stream.
+     * @param os Stream that should image write to.
+     * @throws IOException 
+     */
+    private void writeToStream(String format, OutputStream os) throws IOException{
+        ImageIO.write(this.image, format, os);
+    }
+    
+    /**
      * This method writes picture saved in image property to standard output stream.
-     * @param format Format of picture that should be writed to stream.
+     * @param format Format of picture that should be write to standard output stream.
      * @throws IOException 
      */
     public void writeToStandardOutputStream(String format) throws IOException{
-        ImageIO.write(this.image, format, System.out);
+        this.writeToStream(format, System.out);
+    }
+    
+    /**
+     * This method encodes picture to base64
+     * @param format Format of picture that should be encoded to base64.
+     * @return Base64 string of picture
+     * @throws IOException 
+     */
+    public String getBase64(String format) throws IOException
+    {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        this.writeToStream(format, os);
+        return Base64.getEncoder().encodeToString(os.toByteArray());
     }
 }
