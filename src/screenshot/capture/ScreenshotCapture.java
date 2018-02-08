@@ -75,6 +75,7 @@ public class ScreenshotCapture {
     public void parse(String[] args){
         try {
             CommandLine cmd = parser.parse(options, args);
+            String extension = Capture.IMAGE_FORMAT_PNG;
             
             int width = -1,
                 height = -1;
@@ -90,17 +91,8 @@ public class ScreenshotCapture {
             if(cmd.hasOption("y"))
                 height = Integer.valueOf(cmd.getOptionValue("y"));
             
-            if(cmd.hasOption("S")){
-                int port = Integer.valueOf(cmd.getOptionValue("S"));
-                
-                StreamingServer streamingServer = new StreamingServer(port, width, height);
-                streamingServer.start();
-                return;
-            }
-            
             Capture screenshot = new Capture(width,height);
             
-            String extension = Capture.IMAGE_FORMAT_PNG;
             if(cmd.hasOption("o")){
                 String outputFile = cmd.getOptionValue("o");
                 if(cmd.hasOption("e"))
@@ -121,7 +113,14 @@ public class ScreenshotCapture {
                     throw new InvalidExtensionException(extension);
             }
             
-            if(cmd.hasOption("b")){
+            if(cmd.hasOption("S")){
+                int port = Integer.valueOf(cmd.getOptionValue("S"));
+                
+                StreamingServer streamingServer = new StreamingServer(port, width, height);
+                streamingServer.setFormat(extension);
+                streamingServer.start();
+            }
+            else if(cmd.hasOption("b")){
                 String base64 = screenshot.getBase64(extension);
                 System.out.println(base64);
             }

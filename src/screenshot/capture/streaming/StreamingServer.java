@@ -29,12 +29,17 @@ import screenshot.capture.Capture;
  */
 public class StreamingServer extends Thread{
     private final int port,width,height;
+    private String format = Capture.IMAGE_FORMAT_PNG;
     
     public StreamingServer(int port, int width, int height) throws IOException{
         super();
         this.port = port;
         this.height = height;
         this.width = width;
+    }
+    
+    public void setFormat(String format){
+        this.format = format;
     }
     
     @Override
@@ -44,12 +49,12 @@ public class StreamingServer extends Thread{
             
             server.createContext(
                     "/", 
-                    new BytesHandler(this.width, this.height, Capture.IMAGE_FORMAT_PNG)
+                    new BytesHandler(this.width, this.height, this.format)
             );
             
             server.createContext(
                     "/base64", 
-                    new Base64Handler(this.width, this.height, Capture.IMAGE_FORMAT_PNG)
+                    new Base64Handler(this.width, this.height, this.format)
             );
             server.setExecutor(null); // creates a default executor
             
