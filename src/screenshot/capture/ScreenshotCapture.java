@@ -16,6 +16,7 @@
  */
 package screenshot.capture;
 
+import screenshot.capture.streaming.StreamingServer;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public class ScreenshotCapture {
         options.addOption("s","standardoutput", false, "Get screenshot in standard output stream");
         options.addOption("b","base64", false, "Get screenshot's encoded string in base64");
         options.addOption("B","bytes", false, "Get screenshot's byte array");
+        options.addOption("S","streaming", true, "Run streaming server!");
         
         help.setDescPadding(5);
         help.setLeftPadding(2);
@@ -87,6 +89,14 @@ public class ScreenshotCapture {
             
             if(cmd.hasOption("y"))
                 height = Integer.valueOf(cmd.getOptionValue("y"));
+            
+            if(cmd.hasOption("S")){
+                int port = Integer.valueOf(cmd.getOptionValue("S"));
+                
+                StreamingServer streamingServer = new StreamingServer(port, width, height);
+                streamingServer.start();
+                return;
+            }
             
             Capture screenshot = new Capture(width,height);
             
