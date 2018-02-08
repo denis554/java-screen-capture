@@ -16,6 +16,7 @@
  */
 package screenshot.capture;
 
+import screenshot.capture.streaming.StreamingServer;
 import java.awt.AWTException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public class ScreenshotCapture {
         options.addOption("s","standardoutput", false, "Get screenshot in standard output stream");
         options.addOption("b","base64", false, "Get screenshot's encoded string in base64");
         options.addOption("B","bytes", false, "Get screenshot's byte array");
+        options.addOption("S","streaming", true, "Run streaming server!");
         
         help.setDescPadding(5);
         help.setLeftPadding(2);
@@ -73,6 +75,7 @@ public class ScreenshotCapture {
     public void parse(String[] args){
         try {
             CommandLine cmd = parser.parse(options, args);
+            String extension = Capture.IMAGE_FORMAT_PNG;
             
             int width = -1,
                 height = -1;
@@ -90,7 +93,6 @@ public class ScreenshotCapture {
             
             Capture screenshot = new Capture(width,height);
             
-            String extension = Capture.IMAGE_FORMAT_PNG;
             if(cmd.hasOption("o")){
                 String outputFile = cmd.getOptionValue("o");
                 if(cmd.hasOption("e"))
@@ -111,7 +113,14 @@ public class ScreenshotCapture {
                     throw new InvalidExtensionException(extension);
             }
             
-            if(cmd.hasOption("b")){
+            if(cmd.hasOption("S")){
+                int port = Integer.valueOf(cmd.getOptionValue("S"));
+                
+                StreamingServer streamingServer = new StreamingServer(port, width, height);
+                streamingServer.setFormat(extension);
+                streamingServer.start();
+            }
+            else if(cmd.hasOption("b")){
                 String base64 = screenshot.getBase64(extension);
                 System.out.println(base64);
             }
