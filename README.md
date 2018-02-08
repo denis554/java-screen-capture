@@ -8,7 +8,9 @@ This programme is written in Java language and as a result this is a cross-platf
 usage: java -jar ScreenshotCapture.jar [options]
 
 Options:
-  -s,--standardstream      Get screenshot in standard output stream
+  -s,--standardoutput      Get screenshot in standard output stream
+  -b,--base64              Get screenshot's encoded string in base64
+  -B,--bytes               Get screenshot's byte array
   -e,--extension <arg>     Set output file extension (png|jpg|gif)
   -h,--help                Show help/usage
   -o,--output <arg>        Set output file name

@@ -58,8 +58,9 @@ public class ScreenshotCapture {
         options.addOption("e","extension", true, "Set output file extension (png|jpg|gif)");
         options.addOption("x","width", true, "Set output width");
         options.addOption("y","height", true, "Set output height");
-        options.addOption("s","standardstream", false, "Get screenshot in standard output stream");
+        options.addOption("s","standardoutput", false, "Get screenshot in standard output stream");
         options.addOption("b","base64", false, "Get screenshot's encoded string in base64");
+        options.addOption("B","bytes", false, "Get screenshot's byte array");
         
         help.setDescPadding(5);
         help.setLeftPadding(2);
@@ -116,6 +117,9 @@ public class ScreenshotCapture {
             }
             else if(cmd.hasOption("s")){
                 screenshot.writeToStandardOutputStream(extension);
+            }
+            else if(cmd.hasOption("B")){
+                System.out.println(screenshot.getBytes(extension).toString());
             }
         }
         catch (MissingArgumentException | UnrecognizedOptionException ex){

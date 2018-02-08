@@ -112,6 +112,18 @@ public class Capture {
     }
     
     /**
+     * 
+     * @param format
+     * @return
+     * @throws IOException 
+     */
+    public ByteArrayOutputStream getBytes(String format) throws IOException{
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        this.writeToStream(format, os);
+        return os;
+    }
+    
+    /**
      * This method encodes picture to base64
      * @param format Format of picture that should be encoded to base64.
      * @return Base64 string of picture
@@ -119,8 +131,6 @@ public class Capture {
      */
     public String getBase64(String format) throws IOException
     {
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
-        this.writeToStream(format, os);
-        return Base64.getEncoder().encodeToString(os.toByteArray());
+        return Base64.getEncoder().encodeToString(getBytes(format).toByteArray());
     }
 }
