@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 mrse
+ * Copyright (C) 2018 Amir Aslan Aslani
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,20 @@ import screenshot.capture.Capture;
 
 /**
  *
- * @author mrse
+ * @author Amir Aslan Aslani
  */
 public abstract class ServerHandler implements HttpHandler {
     
     protected final int height;
-    protected final String format;
     protected final int width;
+    protected final String format;
     
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param format 
+     */
     public ServerHandler(int width,int height, String format){
         this.width = width;
         this.height = height;
@@ -43,12 +49,26 @@ public abstract class ServerHandler implements HttpHandler {
     }   
 }
 
+/**
+ * 
+ * @author Amir Aslan Aslani
+ */
 class Base64Handler extends ServerHandler{
-
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param format 
+     */
     public Base64Handler(int width, int height, String format) {
         super(width, height,format);
     }
 
+    /**
+     * 
+     * @param t
+     * @throws IOException 
+     */
     @Override
     public void handle(HttpExchange t) throws IOException {
         try {
@@ -65,12 +85,26 @@ class Base64Handler extends ServerHandler{
     }
 }
 
+/**
+ * 
+ * @author Amir Aslan Aslani
+ */
 class BytesHandler extends ServerHandler{
-
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param format 
+     */
     public BytesHandler(int width, int height, String format) {
         super(width, height,format);
     }
 
+    /**
+     * 
+     * @param t
+     * @throws IOException 
+     */
     @Override
     public void handle(HttpExchange t) throws IOException {
         try {

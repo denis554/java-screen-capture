@@ -19,18 +19,26 @@ package screenshot.capture.streaming;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import screenshot.capture.Capture;
 
 /**
- *
+ * This class run HTTP server on given port and streaming on that.
  * @author Amir Aslan Aslani
  */
 public class StreamingServer extends Thread{
     private final int port,width,height;
     private String format = Capture.IMAGE_FORMAT_PNG;
     
+    /**
+     * Set server's running port and picture width and height.
+     * @param port Running port of HTTP server.
+     * @param width Output image width.
+     * @param height Output image height.
+     * @throws IOException 
+     */
     public StreamingServer(int port, int width, int height) throws IOException{
         super();
         this.port = port;
@@ -38,14 +46,22 @@ public class StreamingServer extends Thread{
         this.width = width;
     }
     
+    /**
+     * Setter of output image format
+     * @param format Output image format
+     */
     public void setFormat(String format){
         this.format = format;
     }
     
+    /**
+     * This method is run server thread.
+     */
     @Override
     public void run(){
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(this.port), 0);
+            server.setExecutor(Executors.newCachedThreadPool());
             
             server.createContext(
                     "/", 
